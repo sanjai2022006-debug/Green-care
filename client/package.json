@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@teachablemachine/image": "^0.8.5",
+    "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.13.5",
     "moment": "^2.30.1",
     "multer": "^2.0.2",

@@ -1,7 +1,14 @@
 import axios from "axios";
 
+/*
+⚠️ VERY IMPORTANT
+Replace the below URL with your REAL Render backend URL.
+Example:
+https://greencare-backend.onrender.com
+*/
+
 const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://your-backend-name.onrender.com/api",
 });
 
 api.interceptors.request.use((req) => {

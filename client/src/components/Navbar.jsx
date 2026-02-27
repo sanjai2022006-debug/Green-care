@@ -5,7 +5,7 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user"); // important for profile page
+    localStorage.removeItem("user");
     navigate("/");
   };
 
@@ -38,6 +38,14 @@ export default function Navbar() {
           className="hover:underline"
         >
           Reminders
+        </button>
+
+        {/* ✅ NEW DETECT PAGE BUTTON */}
+        <button
+          onClick={() => navigate("/detect")}
+          className="hover:underline"
+        >
+          Detect
         </button>
 
         <button

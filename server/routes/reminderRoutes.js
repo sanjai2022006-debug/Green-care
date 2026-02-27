@@ -1,48 +1,67 @@
-const express = require("express");
-const Reminder = require("../models/Reminder");
-const authMiddleware = require("../middleware/authMiddleware");
+import express from "express";
+import Reminder from "../models/Reminder.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-/* GET USER REMINDERS */
+// GET all reminders
 router.get("/", authMiddleware, async (req, res) => {
   try {
-    const reminders = await Reminder.find({ user: req.user.id });
+    const reminders = await Reminder.find({ user: req.user.id })
+      .sort({ date: 1 });
+
     res.json(reminders);
-  } catch (error) {
-    console.error("GET REMINDERS ERROR:", error);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-/* CREATE REMINDER */
+// CREATE reminder
 router.post("/", authMiddleware, async (req, res) => {
   try {
-    const { plantName, type, date } = req.body;
+    const { title, plantName, type, date, repeat } = req.body;
 
-    const reminder = await Reminder.create({
+    const reminder = new Reminder({
+      user: req.user.id,
+      title,
       plantName,
       type,
       date,
-      user: req.user.id
+      repeat,
     });
 
+    await reminder.save();
     res.json(reminder);
-  } catch (error) {
-    console.error("CREATE REMINDER ERROR:", error);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-/* DELETE REMINDER */
+// TOGGLE COMPLETE
+router.put("/:id/complete", authMiddleware, async (req, res) => {
+  try {
+    const reminder = await Reminder.findById(req.params.id);
+
+    if (!reminder)
+      return res.status(404).json({ message: "Reminder not found" });
+
+    reminder.completed = !reminder.completed;
+    await reminder.save();
+
+    res.json(reminder);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE reminder
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     await Reminder.findByIdAndDelete(req.params.id);
     res.json({ message: "Reminder deleted" });
-  } catch (error) {
-    console.error("DELETE REMINDER ERROR:", error);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-module.exports = router;
+export default router;

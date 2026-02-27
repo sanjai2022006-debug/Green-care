@@ -1,9 +1,13 @@
 import userRoutes from "./routes/userRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
+import postRoutes from "./routes/postRoutes.js";
+import reminderRoutes from "./routes/reminderRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+
+import cors from "cors";
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -11,21 +15,19 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-// Routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/posts", require("./routes/postRoutes"));
-app.use("/api/reminders", require("./routes/reminderRoutes"));
 app.use("/uploads", express.static("uploads"));
+
+// Mount routes
+app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/reminders", reminderRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.log(err));
 
-// Test route
 app.get("/", (req, res) => {
   res.send("GreenCare API Running");
 });

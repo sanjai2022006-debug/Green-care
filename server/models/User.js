@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -7,29 +7,44 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     email: {
       type: String,
       required: true,
       unique: true,
     },
+
     password: {
       type: String,
       required: true,
     },
 
-    // 🌿 Profile details
-    bio: { type: String, default: "" },
-    interests: { type: [String], default: [] },
-    profilePic: { type: String, default: "" },
+    bio: {
+      type: String,
+      default: "",
+    },
 
-    // 🌱 Social connections
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    interests: {
+      type: [String],
+      default: [],
+    },
 
-    // 🌾 Saved posts
-    savedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    profilePic: {
+      type: String,
+      default: "",
+    },
+
+    savedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+
+const User = mongoose.model("User", userSchema);
+
+export default User;

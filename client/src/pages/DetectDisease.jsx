@@ -1,204 +1,308 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import * as tmImage from "@teachablemachine/image";
 
-/* 🔥 IMPORTANT: Renamed to avoid conflict with browser URL */
-const MODEL_URL = "https://teachablemachine.withgoogle.com/models/aCMqiCuHD/";
-
-/* ================= REMEDIES ================= */
+const MODEL_URL = "https://teachablemachine.withgoogle.com/models/KwISPyTop/";
 
 const remedies = {
-  "Bacterial Spot": {
-    home: "Remove infected leaves. Improve airflow. Spray neem oil weekly.",
-    chemical: "Apply Copper bactericide every 7–10 days.",
+
+  "Mosaic Virus": {
+    home: [
+      "Remove infected plants immediately to stop spread.",
+      "Control insects like aphids which transmit viruses.",
+      "Disinfect gardening tools after use.",
+      "Maintain proper plant spacing for airflow.",
+      "Use resistant plant varieties if available."
+    ],
+    chemical:
+      "There is no direct chemical cure for mosaic virus. Control insect vectors using insecticides such as Imidacloprid or neem-based insecticides."
   },
+
   "Leaf Spot": {
-    home: "Remove infected leaves. Avoid overhead watering.",
-    chemical: "Use Copper fungicide or Chlorothalonil.",
+    home: [
+      "Spray neem oil every 5 days.",
+      "Apply baking soda spray solution.",
+      "Remove infected leaves immediately.",
+      "Improve airflow around plants.",
+      "Avoid watering plant leaves directly."
+    ],
+    chemical:
+      "Apply copper fungicide or chlorothalonil spray every 7–10 days following label instructions."
   },
-  "Early blight": {
-    home: "Prune affected leaves. Improve spacing.",
-    chemical: "Spray Mancozeb fungicide.",
+
+  "Early Blight": {
+    home: [
+      "Remove infected leaves quickly.",
+      "Use garlic extract spray weekly.",
+      "Apply neem oil spray weekly.",
+      "Mulch soil around plants.",
+      "Ensure plants receive proper sunlight."
+    ],
+    chemical:
+      "Use Mancozeb or Chlorothalonil fungicide weekly until infection reduces."
   },
-  "Late blight": {
-    home: "Remove infected leaves immediately.",
-    chemical: "Apply Copper fungicide.",
+
+  "Late Blight": {
+    home: [
+      "Remove infected plant parts immediately.",
+      "Spray diluted milk solution weekly.",
+      "Avoid overhead watering.",
+      "Improve ventilation around plants.",
+      "Use compost tea spray."
+    ],
+    chemical:
+      "Apply metalaxyl-based fungicide or copper fungicide spray every 7–10 days."
   },
-  "healthy": {
-    home: "Your plant is healthy 🌿 Maintain watering and sunlight.",
-    chemical: "No treatment required.",
-  },
+
+  "Bacterial Spot": {
+    home: [
+      "Remove infected leaves immediately.",
+      "Spray neem oil weekly.",
+      "Avoid overhead watering.",
+      "Disinfect gardening tools.",
+      "Use diluted hydrogen peroxide spray."
+    ],
+    chemical:
+      "Apply copper-based bactericide spray every 7–10 days."
+  }
+
 };
 
 export default function DetectDisease() {
-  const imageRef = useRef(null);
+
   const [model, setModel] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [result, setResult] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
+  const [imageElement, setImageElement] = useState(null);
+  const [prediction, setPrediction] = useState(null);
+  const [confidence, setConfidence] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  /* ================= LOAD MODEL ================= */
-
-  useEffect(() => {
-    const loadModel = async () => {
-      try {
-        const modelURL = MODEL_URL + "model.json";
-        const metadataURL = MODEL_URL + "metadata.json";
-        const loadedModel = await tmImage.load(modelURL, metadataURL);
-        setModel(loadedModel);
-      } catch (err) {
-        console.error("Model loading error:", err);
-      }
-    };
-    loadModel();
+  const loadModel = useCallback(async () => {
+    const modelURL = MODEL_URL + "model.json";
+    const metadataURL = MODEL_URL + "metadata.json";
+    const loadedModel = await tmImage.load(modelURL, metadataURL);
+    setModel(loadedModel);
   }, []);
 
-  /* ================= IMAGE UPLOAD ================= */
+  useEffect(() => {
+    loadModel();
+  }, [loadModel]);
 
-  const handleImageChange = (e) => {
+  const handleImageUpload = (e) => {
+
     const file = e.target.files[0];
     if (!file) return;
 
-    const imageURL = window.URL.createObjectURL(file); // ✅ FIXED
-    setPreview(imageURL);
-    setResult(null);
+    const url = URL.createObjectURL(file);
+    setImageURL(url);
+
+    const img = new Image();
+    img.src = url;
+    img.onload = () => setImageElement(img);
+
+    setPrediction(null);
+    setConfidence(null);
   };
 
-  /* ================= DETECT ================= */
+  const detectDisease = async () => {
 
-  const handleDetect = async () => {
-    if (!model || !imageRef.current) return;
+    if (!model || !imageElement) {
+      alert("Upload image first");
+      return;
+    }
 
     setLoading(true);
 
-    const prediction = await model.predict(imageRef.current);
+    const predictions = await model.predict(imageElement);
 
-    let highest = prediction[0];
-    for (let i = 1; i < prediction.length; i++) {
-      if (prediction[i].probability > highest.probability) {
-        highest = prediction[i];
-      }
-    }
+    let best = predictions[0];
 
-    const confidence = (highest.probability * 100).toFixed(2);
-
-    const severity =
-      confidence > 85
-        ? "High"
-        : confidence > 60
-        ? "Medium"
-        : "Low";
-
-    const remedyData = remedies[highest.className] || {
-      home: "Remedy not available for this disease.",
-      chemical: "Remedy not available for this disease.",
-    };
-
-    setResult({
-      disease: highest.className,
-      confidence,
-      severity,
-      home: remedyData.home,
-      chemical: remedyData.chemical,
+    predictions.forEach(p => {
+      if (p.probability > best.probability) best = p;
     });
+
+    setPrediction(best.className);
+    setConfidence((best.probability * 100).toFixed(2));
 
     setLoading(false);
   };
 
-  /* ================= UI ================= */
+  const resetDetection = () => {
+    setImageURL(null);
+    setPrediction(null);
+    setConfidence(null);
+    setImageElement(null);
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-200 via-green-100 to-green-300 p-6">
-      <div className="bg-white/80 backdrop-blur-lg shadow-2xl rounded-3xl p-8 w-full max-w-2xl">
 
-        <h1 className="text-3xl font-bold text-center text-green-700 mb-8">
-          🌿 Smart Plant Disease Detector
-        </h1>
+    <div style={styles.page}>
 
-        {/* Upload Box */}
-        <label className="flex flex-col items-center justify-center border-2 border-dashed border-green-400 rounded-2xl p-8 cursor-pointer hover:bg-green-50 transition">
-          <span className="text-gray-600">
-            Click to upload plant image
-          </span>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden"
-          />
-        </label>
+      <h1 style={styles.title}>🌿 Plant Disease Detection</h1>
 
-        {/* Image Preview */}
-        {preview && (
-          <img
-            ref={imageRef}
-            src={preview}
-            alt="preview"
-            className="mt-6 w-full h-72 object-cover rounded-2xl shadow-lg"
-          />
-        )}
+      <div style={styles.container}>
 
-        {/* Detect Button */}
-        <button
-          onClick={handleDetect}
-          className="mt-6 w-full bg-green-600 text-white py-3 rounded-2xl font-semibold text-lg hover:bg-green-700 transition shadow-lg"
-        >
-          Detect Disease
-        </button>
+        {/* LEFT PANEL */}
 
-        {/* Loading */}
-        {loading && (
-          <p className="mt-4 text-center text-gray-700 animate-pulse">
-            🔍 Analyzing...
-          </p>
-        )}
+        <div style={styles.left}>
 
-        {/* Result */}
-        {result && (
-          <div className="mt-8 bg-white rounded-2xl shadow p-6">
+          <label style={styles.uploadBtn}>
+            📷 Choose Plant Image
+            <input type="file" hidden onChange={handleImageUpload}/>
+          </label>
 
-            <h2 className="text-xl font-bold text-green-800">
-              🌱 {result.disease}
-            </h2>
+          {imageURL && (
+            <img src={imageURL} alt="preview" style={styles.preview}/>
+          )}
 
-            <p className="mt-2">
-              📊 Confidence: <strong>{result.confidence}%</strong>
+          <button style={styles.detectBtn} onClick={detectDisease}>
+            🔍 Detect Disease
+          </button>
+
+          {loading && <p>Analyzing image...</p>}
+
+        </div>
+
+        {/* RIGHT PANEL */}
+
+        <div style={styles.right}>
+
+          {!prediction && (
+            <p style={{color:"#555"}}>
+              Upload an image to see disease detection results.
             </p>
+          )}
 
-            <p className="mt-2">
-              ⚠ Severity:
-              <span className={`ml-2 font-bold ${
-                result.severity === "High"
-                  ? "text-red-600"
-                  : result.severity === "Medium"
-                  ? "text-yellow-600"
-                  : "text-green-600"
-              }`}>
-                {result.severity}
-              </span>
-            </p>
+          {prediction && (
 
-            <div className="mt-6 bg-green-50 p-4 rounded-xl">
-              <h3 className="font-semibold text-green-700">
-                🏡 Home Remedy
-              </h3>
-              <p className="text-gray-700 mt-2">
-                {result.home}
-              </p>
+            <div>
+
+              <h2 style={styles.disease}>
+                Detected: {prediction}
+              </h2>
+
+              <p>Confidence: {confidence}%</p>
+
+              {remedies[prediction] && (
+
+                <>
+
+                  {/* HOME REMEDIES */}
+
+                  <div style={styles.card}>
+
+                    <h3>🏡 Home Remedies</h3>
+
+                    <ul>
+                      {remedies[prediction].home.map((r,i)=>(
+                        <li key={i}>{r}</li>
+                      ))}
+                    </ul>
+
+                  </div>
+
+                  {/* CHEMICAL */}
+
+                  <div style={styles.card}>
+
+                    <h3>🧪 Chemical Treatment</h3>
+
+                    <p>{remedies[prediction].chemical}</p>
+
+                  </div>
+
+                </>
+
+              )}
+
+              <button style={styles.doneBtn} onClick={resetDetection}>
+                ✔ OK / Done
+              </button>
+
             </div>
 
-            <div className="mt-4 bg-green-50 p-4 rounded-xl">
-              <h3 className="font-semibold text-green-700">
-                🧪 Chemical Remedy
-              </h3>
-              <p className="text-gray-700 mt-2">
-                {result.chemical}
-              </p>
-            </div>
+          )}
 
-          </div>
-        )}
+        </div>
 
       </div>
+
     </div>
   );
 }
+
+const styles = {
+
+  page:{
+    minHeight:"100vh",
+    background:"linear-gradient(135deg,#d1fae5,#bbf7d0)",
+    padding:"40px"
+  },
+
+  title:{
+    textAlign:"center",
+    color:"#065f46",
+    marginBottom:"30px"
+  },
+
+  container:{
+    display:"flex",
+    gap:"40px",
+    background:"white",
+    padding:"30px",
+    borderRadius:"12px",
+    width:"1000px",
+    margin:"auto",
+    boxShadow:"0 10px 25px rgba(0,0,0,0.15)"
+  },
+
+  left:{flex:1,textAlign:"center"},
+  right:{flex:1},
+
+  uploadBtn:{
+    background:"#16a34a",
+    color:"white",
+    padding:"12px",
+    borderRadius:"8px",
+    cursor:"pointer",
+    display:"block",
+    marginBottom:"20px"
+  },
+
+  preview:{
+    width:"100%",
+    borderRadius:"10px",
+    marginBottom:"20px"
+  },
+
+  detectBtn:{
+    width:"100%",
+    padding:"12px",
+    background:"#15803d",
+    border:"none",
+    color:"white",
+    borderRadius:"8px",
+    cursor:"pointer",
+    fontSize:"16px"
+  },
+
+  disease:{
+    color:"#065f46"
+  },
+
+  card:{
+    background:"#f0fdf4",
+    padding:"15px",
+    borderRadius:"8px",
+    marginTop:"15px"
+  },
+
+  doneBtn:{
+    marginTop:"20px",
+    padding:"10px 20px",
+    background:"#065f46",
+    color:"white",
+    border:"none",
+    borderRadius:"6px",
+    cursor:"pointer"
+  }
+};

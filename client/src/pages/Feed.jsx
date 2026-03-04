@@ -3,16 +3,20 @@ import api from "../api/api";
 import moment from "moment";
 
 const Feed = () => {
+
   const currentUser = JSON.parse(localStorage.getItem("user"));
 
   const [posts, setPosts] = useState([]);
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
-  const [editingPostId, setEditingPostId] = useState(null);
-  const [editText, setEditText] = useState("");
   const [commentText, setCommentText] = useState({});
+  const [likingId, setLikingId] = useState(null);
 
-  /* ---------------- LOAD POSTS ---------------- */
+  const [editingPost, setEditingPost] = useState(null);
+  const [editCaption, setEditCaption] = useState("");
+
+  /* LOAD POSTS */
+
   const loadPosts = async () => {
     try {
       const res = await api.get("/posts");
@@ -24,106 +28,151 @@ const Feed = () => {
 
   useEffect(() => {
     loadPosts();
-
-    // 🔄 Auto refresh every 5 seconds
-    const interval = setInterval(() => {
-      loadPosts();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
-  /* ---------------- CREATE POST ---------------- */
+  /* CREATE POST */
+
   const createPost = async () => {
+
     if (!caption.trim()) return;
 
     try {
+
       const formData = new FormData();
       formData.append("caption", caption);
+
       if (image) formData.append("image", image);
 
-      const res = await api.post("/posts", formData);
+      await api.post("/posts", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
 
-      setPosts((prev) => [res.data, ...prev]);
+      await loadPosts();
+
       setCaption("");
       setImage(null);
+
     } catch (err) {
       console.error(err);
     }
+
   };
 
-  /* ---------------- DELETE POST ---------------- */
+  /* DELETE POST */
+
   const deletePost = async (id) => {
+
+    if (!window.confirm("Delete this post?")) return;
+
     try {
+
       await api.delete(`/posts/${id}`);
-      setPosts((prev) => prev.filter((post) => post._id !== id));
+
+      setPosts(prev => prev.filter(p => p._id !== id));
+
     } catch (err) {
       console.error(err);
     }
+
   };
 
-  /* ---------------- LIKE POST ---------------- */
-  const likePost = async (id) => {
-    try {
-      const res = await api.post(`/posts/${id}/like`);
-      setPosts((prev) => prev.map((post) => (post._id === id ? res.data : post)));
-    } catch (err) {
-      console.error(err);
-    }
+  /* OPEN EDIT */
+
+  const openEdit = (post) => {
+
+    setEditingPost(post);
+    setEditCaption(post.caption);
+
   };
 
-  /* ---------------- EDIT POST ---------------- */
-  const saveEdit = async (id) => {
+  /* UPDATE POST */
+
+  const updatePost = async () => {
+
     try {
-      const res = await api.put(`/posts/${id}`, {
-        caption: editText,
+
+      const res = await api.put(`/posts/${editingPost._id}`, {
+        caption: editCaption
       });
-      setPosts((prev) => prev.map((post) => (post._id === id ? res.data : post)));
-      setEditingPostId(null);
-      setEditText("");
+
+      setPosts(prev =>
+        prev.map(p =>
+          p._id === editingPost._id ? res.data : p
+        )
+      );
+
+      setEditingPost(null);
+
     } catch (err) {
       console.error(err);
     }
+
   };
 
-  /* ---------------- ADD COMMENT ---------------- */
+  /* LIKE POST */
+
+  const likePost = async (id) => {
+
+    if (likingId === id) return;
+
+    try {
+
+      setLikingId(id);
+
+      const res = await api.post(`/posts/${id}/like`);
+
+      setPosts(prev =>
+        prev.map(p =>
+          p._id === id ? res.data : p
+        )
+      );
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLikingId(null);
+    }
+
+  };
+
+  /* ADD COMMENT */
+
   const addComment = async (id) => {
+
     if (!commentText[id]?.trim()) return;
 
     try {
+
       const res = await api.post(`/posts/${id}/comment`, {
-        text: commentText[id],
+        text: commentText[id]
       });
 
-      setPosts((prev) => prev.map((post) => (post._id === id ? res.data : post)));
-      setCommentText((prev) => ({
-        ...prev,
-        [id]: "",
-      }));
+      setPosts(prev =>
+        prev.map(p =>
+          p._id === id ? res.data : p
+        )
+      );
+
+      setCommentText({ ...commentText, [id]: "" });
+
     } catch (err) {
       console.error(err);
     }
+
   };
 
-  /* ---------------- DELETE COMMENT ---------------- */
-  const deleteComment = async (postId, commentId) => {
-    try {
-      const res = await api.delete(`/posts/${postId}/comment/${commentId}`);
-      setPosts((prev) => prev.map((post) => (post._id === postId ? res.data : post)));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  /* ---------------- UI ---------------- */
   return (
+
     <div className="max-w-2xl mx-auto p-6">
+
       <h1 className="text-3xl font-bold mb-6 text-green-700">
         🌿 GreenCare Feed
       </h1>
 
       {/* CREATE POST */}
-      <div className="bg-white shadow-md rounded-xl p-5 mb-6 border">
+
+      <div className="bg-white shadow rounded-xl p-5 mb-6 border">
+
         <textarea
           className="w-full border rounded-lg p-3"
           placeholder="Share something..."
@@ -132,7 +181,8 @@ const Feed = () => {
         />
 
         <div className="flex justify-between mt-4 items-center">
-          <label className="bg-gray-100 px-4 py-2 rounded cursor-pointer hover:bg-gray-200">
+
+          <label className="bg-gray-100 px-4 py-2 rounded cursor-pointer">
             Choose File
             <input
               type="file"
@@ -147,132 +197,190 @@ const Feed = () => {
           >
             Post
           </button>
+
         </div>
+
       </div>
 
       {/* POSTS */}
-      {posts.map((post) => (
-        <div
-          key={post._id}
-          className="bg-white shadow-md rounded-xl p-5 mb-6 border"
-        >
-          {/* OWNER */}
-          <p className="font-semibold text-gray-700 mb-2">
-            {post.user?.name}
-          </p>
 
-          {/* CAPTION */}
-          {editingPostId === post._id ? (
-            <>
-              <textarea
-                className="w-full border p-2"
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-              />
-              <button
-                onClick={() => saveEdit(post._id)}
-                className="bg-blue-500 text-white px-3 py-1 mt-2 rounded"
-              >
-                Save
-              </button>
-            </>
-          ) : (
-            <p>{post.caption}</p>
-          )}
+      {posts.map(post => {
 
-          {/* IMAGE */}
-          {post.image && (
-            <img
-              src={`http://localhost:5000/uploads/${post.image}`}
-              className="mt-3 rounded-lg"
-            />
-          )}
+        const postUserId =
+          typeof post.user === "object"
+            ? post.user._id
+            : post.user;
 
-          {/* TIME */}
-          <p className="text-sm text-gray-500 mt-2">
-            {moment(post.createdAt).fromNow()}
-          </p>
+        const isOwner =
+          postUserId?.toString() === currentUser?._id?.toString();
 
-          {/* ACTIONS */}
-          <div className="flex gap-4 mt-4 items-center">
-            {/* LIKE */}
-            <button
-              onClick={() => likePost(post._id)}
-              className="text-red-500 font-medium"
-            >
-              ❤️ {post.likes.length}
-            </button>
+        const isLiked = post.likes?.some(
+          (id) => id.toString() === currentUser?._id?.toString()
+        );
 
-            {/* OWNER CONTROLS */}
-            {post.user?._id === currentUser?._id && (
-              <>
-                <button
-                  onClick={() => {
-                    setEditingPostId(post._id);
-                    setEditText(post.caption);
-                  }}
-                  className="text-blue-600"
-                >
-                  Edit
-                </button>
+        return (
 
-                <button
-                  onClick={() => deletePost(post._id)}
-                  className="text-gray-600"
-                >
-                  Delete
-                </button>
-              </>
-            )}
-          </div>
+          <div
+            key={post._id}
+            className="bg-white shadow rounded-xl p-5 mb-6 border"
+          >
 
-          {/* COMMENTS */}
-          <div className="mt-4">
-            {post.comments.map((c) => (
-              <div
-                key={c._id}
-                className="flex justify-between bg-gray-100 p-2 rounded mb-2"
-              >
-                <span>
-                  <strong>{c.user?.name}:</strong> {c.text}
-                </span>
+            {/* HEADER */}
 
-                {c.user?._id === currentUser?._id && (
+            <div className="flex justify-between items-center mb-2">
+
+              <p className="font-semibold text-gray-700">
+                {post.user?.name || "User"}
+              </p>
+
+              {isOwner && (
+
+                <div className="flex gap-3 text-sm">
+
                   <button
-                    onClick={() => deleteComment(post._id, c._id)}
-                    className="text-red-500 text-xs"
+                    onClick={() => openEdit(post)}
+                    className="text-blue-600"
                   >
-                    Delete
+                    ✏️ Edit
                   </button>
-                )}
-              </div>
-            ))}
 
-            <div className="flex mt-2 gap-2">
-              <input
-                type="text"
-                placeholder="Add comment..."
-                value={commentText[post._id] || ""}
-                onChange={(e) =>
-                  setCommentText((prev) => ({
-                    ...prev,
-                    [post._id]: e.target.value,
-                  }))
-                }
-                className="flex-1 border rounded p-2"
-              />
-              <button
-                onClick={() => addComment(post._id)}
-                className="bg-green-600 text-white px-4 rounded"
-              >
-                Send
-              </button>
+                  <button
+                    onClick={() => deletePost(post._id)}
+                    className="text-red-600"
+                  >
+                    🗑 Delete
+                  </button>
+
+                </div>
+
+              )}
+
             </div>
+
+            <p>{post.caption}</p>
+
+            {post.image && (
+              <img
+                src={`http://localhost:5000/uploads/${post.image}`}
+                alt="post"
+                className="mt-3 rounded-lg w-full"
+              />
+            )}
+
+            <p className="text-sm text-gray-500 mt-2">
+              {moment(post.createdAt).fromNow()}
+            </p>
+
+            {/* LIKE */}
+
+            <div className="mt-4">
+
+              <button
+                onClick={() => likePost(post._id)}
+                className={`font-medium ${
+                  isLiked ? "text-red-600" : "text-gray-500"
+                }`}
+              >
+                ❤️ {post.likes?.length || 0}
+              </button>
+
+            </div>
+
+            {/* COMMENTS */}
+
+            <div className="mt-4">
+
+              {post.comments?.map(c => (
+
+                <div
+                  key={c._id}
+                  className="bg-gray-100 p-2 rounded mb-2"
+                >
+
+                  <strong>{c.user?.name || "User"}:</strong> {c.text}
+
+                </div>
+
+              ))}
+
+              <div className="flex mt-2 gap-2">
+
+                <input
+                  type="text"
+                  placeholder="Add comment..."
+                  value={commentText[post._id] || ""}
+                  onChange={(e) =>
+                    setCommentText({
+                      ...commentText,
+                      [post._id]: e.target.value
+                    })
+                  }
+                  className="flex-1 border rounded p-2"
+                />
+
+                <button
+                  onClick={() => addComment(post._id)}
+                  className="bg-green-600 text-white px-4 rounded"
+                >
+                  Send
+                </button>
+
+              </div>
+
+            </div>
+
           </div>
+
+        );
+
+      })}
+
+      {/* EDIT MODAL */}
+
+      {editingPost && (
+
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+
+          <div className="bg-white p-6 rounded-xl w-96">
+
+            <h2 className="text-xl font-bold mb-4">
+              Edit Post
+            </h2>
+
+            <textarea
+              className="w-full border p-2 rounded"
+              value={editCaption}
+              onChange={(e) => setEditCaption(e.target.value)}
+            />
+
+            <div className="flex justify-end gap-3 mt-4">
+
+              <button
+                onClick={() => setEditingPost(null)}
+                className="px-4 py-2 border rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={updatePost}
+                className="bg-green-600 text-white px-4 py-2 rounded"
+              >
+                Update
+              </button>
+
+            </div>
+
+          </div>
+
         </div>
-      ))}
+
+      )}
+
     </div>
+
   );
+
 };
 
 export default Feed;

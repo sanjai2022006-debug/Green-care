@@ -15,10 +15,12 @@ const Welcome = () => {
   const [quote, setQuote] = useState("");
 
   useEffect(() => {
+    // Pick random quote
     const randomQuote =
       quotes[Math.floor(Math.random() * quotes.length)];
     setQuote(randomQuote);
 
+    // Redirect after 3.5 seconds
     const timer = setTimeout(() => {
       navigate("/feed");
     }, 3500);
@@ -28,7 +30,6 @@ const Welcome = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-green-300 to-green-500 text-white">
-
       <div className="text-center px-6">
         <h1 className="text-4xl font-bold mb-6 animate-pulse">
           🌿 Welcome to GreenCare
@@ -42,7 +43,6 @@ const Welcome = () => {
           Redirecting to your garden...
         </p>
       </div>
-
     </div>
   );
 };

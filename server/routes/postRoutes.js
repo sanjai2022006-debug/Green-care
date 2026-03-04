@@ -23,12 +23,14 @@ const upload = multer({ storage });
 
 router.get("/", authMiddleware, async (req, res) => {
   try {
+
     const posts = await Post.find()
       .populate("user", "name profilePic")
       .populate("comments.user", "name profilePic")
       .sort({ createdAt: -1 });
 
     res.json(posts);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -38,10 +40,11 @@ router.get("/", authMiddleware, async (req, res) => {
 
 router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
   try {
+
     const newPost = new Post({
       caption: req.body.caption,
-      image: req.file ? req.file.filename : null,
-      user: req.user.id,
+      image: req.file ? req.file.filename : "",
+      user: req.user._id,
     });
 
     await newPost.save();
@@ -51,106 +54,130 @@ router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
       .populate("comments.user", "name profilePic");
 
     res.json(populatedPost);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ---------------- EDIT POST (OWNER ONLY) ---------------- */
+/* ---------------- EDIT POST ---------------- */
 
 router.put("/:id", authMiddleware, async (req, res) => {
   try {
+
     const post = await Post.findById(req.params.id);
 
     if (!post)
       return res.status(404).json({ message: "Post not found" });
 
-    if (post.user.toString() !== req.user.id)
+    if (post.user.toString() !== req.user._id.toString())
       return res.status(403).json({ message: "Not authorized" });
 
-    post.caption = req.body.caption;
+    post.caption = req.body.caption || post.caption;
+
     await post.save();
 
-    res.json(post);
+    const updatedPost = await Post.findById(post._id)
+      .populate("user", "name profilePic")
+      .populate("comments.user", "name profilePic");
+
+    res.json(updatedPost);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ---------------- DELETE POST (OWNER ONLY) ---------------- */
+/* ---------------- DELETE POST ---------------- */
 
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
+
     const post = await Post.findById(req.params.id);
 
     if (!post)
       return res.status(404).json({ message: "Post not found" });
 
-    if (post.user.toString() !== req.user.id)
+    if (post.user.toString() !== req.user._id.toString())
       return res.status(403).json({ message: "Not authorized" });
 
     await post.deleteOne();
 
     res.json({ message: "Post deleted successfully" });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ---------------- LIKE (ANYONE) ---------------- */
+/* ---------------- LIKE / UNLIKE ---------------- */
 
 router.post("/:id/like", authMiddleware, async (req, res) => {
   try {
+
     const post = await Post.findById(req.params.id);
 
     if (!post)
       return res.status(404).json({ message: "Post not found" });
 
-    const alreadyLiked = post.likes.includes(req.user.id);
+    const userId = req.user._id.toString();
 
-    if (alreadyLiked) {
-      post.likes = post.likes.filter(
-        (like) => like.toString() !== req.user.id
-      );
+    const index = post.likes.findIndex(
+      (id) => id.toString() === userId
+    );
+
+    if (index !== -1) {
+      post.likes.splice(index, 1);
     } else {
-      post.likes.push(req.user.id);
+      post.likes.push(req.user._id);
     }
 
     await post.save();
 
-    res.json(post);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* ---------------- COMMENT (ANYONE) ---------------- */
-
-router.post("/:id/comment", authMiddleware, async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-
-    post.comments.push({
-      text: req.body.text,
-      user: req.user.id,
-    });
-
-    await post.save();
-
-    const updatedPost = await Post.findById(req.params.id)
+    const updatedPost = await Post.findById(post._id)
       .populate("user", "name profilePic")
       .populate("comments.user", "name profilePic");
 
     res.json(updatedPost);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ---------------- DELETE COMMENT (COMMENT OWNER ONLY) ---------------- */
+/* ---------------- ADD COMMENT ---------------- */
+
+router.post("/:id/comment", authMiddleware, async (req, res) => {
+  try {
+
+    const post = await Post.findById(req.params.id);
+
+    if (!post)
+      return res.status(404).json({ message: "Post not found" });
+
+    post.comments.push({
+      text: req.body.text,
+      user: req.user._id,
+    });
+
+    await post.save();
+
+    const updatedPost = await Post.findById(post._id)
+      .populate("user", "name profilePic")
+      .populate("comments.user", "name profilePic");
+
+    res.json(updatedPost);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ---------------- DELETE COMMENT ---------------- */
 
 router.delete("/:postId/comment/:commentId", authMiddleware, async (req, res) => {
   try {
+
     const post = await Post.findById(req.params.postId);
 
     const comment = post.comments.id(req.params.commentId);
@@ -158,13 +185,43 @@ router.delete("/:postId/comment/:commentId", authMiddleware, async (req, res) =>
     if (!comment)
       return res.status(404).json({ message: "Comment not found" });
 
-    if (comment.user.toString() !== req.user.id)
+    if (comment.user.toString() !== req.user._id.toString())
       return res.status(403).json({ message: "Not authorized" });
 
     comment.deleteOne();
     await post.save();
 
-    const updatedPost = await Post.findById(req.params.postId)
+    const updatedPost = await Post.findById(post._id)
+      .populate("user", "name profilePic")
+      .populate("comments.user", "name profilePic");
+
+    res.json(updatedPost);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ---------------- EDIT COMMENT ---------------- */
+
+router.put("/:postId/comment/:commentId", authMiddleware, async (req, res) => {
+  try {
+
+    const post = await Post.findById(req.params.postId);
+
+    const comment = post.comments.id(req.params.commentId);
+
+    if (!comment)
+      return res.status(404).json({ message: "Comment not found" });
+
+    if (comment.user.toString() !== req.user._id.toString())
+      return res.status(403).json({ message: "Not authorized" });
+
+    comment.text = req.body.text;
+
+    await post.save();
+
+    const updatedPost = await Post.findById(post._id)
       .populate("user", "name profilePic")
       .populate("comments.user", "name profilePic");
 

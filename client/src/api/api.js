@@ -1,17 +1,11 @@
 import axios from "axios";
 
-/*
-⚠️ VERY IMPORTANT
-Replace the below URL with your REAL Render backend URL.
-Example:
-https://greencare-backend.onrender.com
-*/
-
 const api = axios.create({
-  baseURL: "https://your-backend-name.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
 api.interceptors.request.use((req) => {
+
   const token = localStorage.getItem("token");
 
   if (token) {
@@ -19,6 +13,7 @@ api.interceptors.request.use((req) => {
   }
 
   return req;
+
 });
 
 export default api;

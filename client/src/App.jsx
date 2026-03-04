@@ -1,26 +1,36 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
-import ProtectedRoute from "./components/ProtectedRoute";
-
 import Login from "./pages/Login";
+import Welcome from "./pages/Welcome";
 import Feed from "./pages/Feed";
 import Profile from "./pages/Profile";
 import Reminders from "./pages/Reminders";
 import DetectDisease from "./pages/DetectDisease";
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
-      <Navbar />
-
       <Routes>
+
         <Route path="/" element={<Login />} />
+
+        <Route
+          path="/welcome"
+          element={
+            <ProtectedRoute>
+              <Navbar />
+              <Welcome />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/feed"
           element={
             <ProtectedRoute>
+              <Navbar />
               <Feed />
             </ProtectedRoute>
           }
@@ -30,6 +40,7 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute>
+              <Navbar />
               <Profile />
             </ProtectedRoute>
           }
@@ -39,20 +50,22 @@ function App() {
           path="/reminders"
           element={
             <ProtectedRoute>
+              <Navbar />
               <Reminders />
             </ProtectedRoute>
           }
         />
 
-        {/* ✅ NEW DETECT ROUTE */}
         <Route
           path="/detect"
           element={
             <ProtectedRoute>
+              <Navbar />
               <DetectDisease />
             </ProtectedRoute>
           }
         />
+
       </Routes>
     </Router>
   );

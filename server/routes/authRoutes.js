@@ -1,67 +1,50 @@
-const express = require("express");
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+
 const router = express.Router();
 
-const User = require("../models/User");
-const authMiddleware = require("../middleware/authMiddleware");
-
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const multer = require("multer");
-
-/* ================= MULTER CONFIG ================= */
-
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const upload = multer({ storage });
-
 /* ================= REGISTER ================= */
-
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
-    if (existingUser)
+    if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    const newUser = await User.create({
       name,
       email,
       password: hashedPassword,
     });
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    res.status(201).json({ message: "User registered successfully" });
 
-    res.json({ user, token });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error("Register Error:", error);
+    res.status(500).json({ message: "Server error during registration" });
   }
 });
 
 /* ================= LOGIN ================= */
-
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: "User not found" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
+    }
 
     const token = jwt.sign(
       { id: user._id },
@@ -72,48 +55,19 @@ router.post("/login", async (req, res) => {
     res.json({
       token,
       user: {
-        _id: user._id,
-        email: user.email,
+        id: user._id,
         name: user.name,
+        email: user.email,
         bio: user.bio,
+        interests: user.interests,
         profilePic: user.profilePic,
       },
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ message: "Server error during login" });
   }
 });
 
-/* ================= UPDATE PROFILE ================= */
-
-router.put(
-  "/update",
-  authMiddleware,
-  upload.single("profilePic"),
-  async (req, res) => {
-    try {
-      const user = await User.findById(req.user.id);
-
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      user.bio = req.body.bio || user.bio;
-
-      if (req.file) {
-        user.profilePic = req.file.filename;
-      }
-
-      if (req.body.password) {
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(req.body.password, salt);
-      }
-
-      await user.save();
-
-      res.json(user);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  }
-);
-
-module.exports = router;
+export default router;

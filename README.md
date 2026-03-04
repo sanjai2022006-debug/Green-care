@@ -32,17 +32,19 @@ Demo Link:
 ```
 ## 📸 Screenshots
 
+
 ### 📰 Feed Page
-<img src="https://github.com/user-attachments/assets/1e5b3221-363a-4deb-b2cf-2326e4c63d0e" width="800"/>
+<img width="800" alt="Feed" src="https://github.com/user-attachments/assets/1e5b3221-363a-4deb-b2cf-2326e4c63d0e" />
 
 ### 👤 Profile Page
-<img src="https://github.com/user-attachments/assets/1b98c286-418d-44f5-a22f-13ab5d7a17a3" width="800"/>
+<img width="800" alt="Profile" src="https://github.com/user-attachments/assets/1b98c286-418d-44f5-a22f-13ab5d7a17a3" />
 
 ### ⏰ Reminder System
-<img src="https://github.com/user-attachments/assets/90c0d378-7a53-4622-82a8-8866ee2636d2" width="800"/>
+<img width="800" alt="Reminder" src="https://github.com/user-attachments/assets/90c0d378-7a53-4622-82a8-8866ee2636d2" />
 
 ### 🍃 Disease Detection
-<img src="https://github.com/user-attachments/assets/b918bc6f-13ab-43e5-9c08-506c5d3a10ac" width="800"/>
+<img width="800" alt="Disease Detection" src="https://github.com/user-attachments/assets/b918bc6f-13ab-43e5-9c08-506c5d3a10ac" />
+
 ```
 ---
 

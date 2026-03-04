@@ -1,258 +1,156 @@
-# 🌿 Green-care – Full Stack MERN Plant Care Social Platform
+🌿 GreenCare – Smart Plant Care Platform
 
-## 📌 Project Overview
+GreenCare is a full-stack MERN web application designed to help plant lovers manage plant health and connect with a plant care community.
+The platform allows users to share plant posts, set reminders for plant care, and detect plant diseases using AI.
+Users can upload images of plant leaves and the system predicts possible diseases using a trained machine learning model.
+GreenCare combines social interaction, plant care management, and intelligent disease detection in a single platform.
+The goal of the application is to make plant care easier and more accessible.
+It helps users maintain healthy plants while learning from a community of other plant enthusiasts.
 
-Green-care is a full-stack MERN (MongoDB, Express.js, React, Node.js) social media web application designed around plant care and gardening. The platform allows multiple users to create accounts, share plant-related posts, interact through likes and comments, manage personal profiles, and set plant-care reminders.
+🚀 Features
 
-The application follows a production-ready architecture including JWT authentication, protected REST APIs, image upload functionality, MongoDB relational references, and real-time UI updates without page reloads.
+GreenCare provides multiple features that support both community interaction and plant care management.
+Users can share posts about their plants, interact with other users, and maintain their plant care schedules.
+The application integrates a feed system, reminder system, and AI-based disease detection.
+Each feature is designed to simplify plant care tasks and provide useful plant health insights.
+The platform also ensures secure access through authentication and protected routes.
+All these tools are integrated into a single user-friendly web application.
 
-This project demonstrates strong full-stack development skills, REST API design, authentication handling, file management, and frontend state management.
+🔐 User Authentication
 
----
+GreenCare includes a secure authentication system to manage user accounts.
+Users can register with their details and log in using their credentials.
+The system uses JWT authentication to protect private routes within the application.
+Only authenticated users can create posts, interact with content, or manage reminders.
+User information is stored securely in the database and handled through backend validation.
+This authentication system ensures safe and reliable access to the platform features.
 
-## 🏗️ Architecture Overview
+📰 Community Feed
 
-Green-care follows a client-server architecture:
+The community feed allows users to share plant-related content with others.
+Users can create posts and upload images of their plants.
+Other users can interact with these posts by liking or commenting on them.
+Users can also edit or delete their own posts when necessary.
+The feed encourages interaction and knowledge sharing among plant lovers.
+It helps users learn about plant care through community discussions and experiences.
 
-### 🔹 Frontend (Client Side)
-- Built using React with Vite
-- Tailwind CSS for styling
-- Axios for API communication
-- React Router DOM for routing
-- Moment.js for timestamps
-- LocalStorage for JWT & user persistence
+👤 User Profile
 
-### 🔹 Backend (Server Side)
-- Node.js with Express.js
-- RESTful API architecture
-- MongoDB database
-- Mongoose ODM for schema modeling
-- JWT authentication middleware
-- Multer for file uploads
+Each user has a dedicated profile page within the platform.
+The profile page displays user information and the posts created by the user.
+Users can update their name, bio, and personal interests.
+A profile picture can also be uploaded to personalize the account.
+The profile helps other users understand the interests of each member.
+It also acts as a personal space where users can manage their content.
 
-### 🔹 Database
-MongoDB is used to store users, posts, comments, and reminders. Relationships are handled using ObjectId references.
+⏰ Plant Care Reminder System
 
----
+GreenCare includes a reminder system to help users stay consistent with plant care tasks.
+Users can create reminders for activities such as watering, fertilizing, and pruning plants.
+Each reminder can be scheduled based on different frequencies.
+Supported reminder schedules include daily, weekly, and monthly options.
+Users can edit or delete reminders whenever required.
+This system helps ensure that plants receive regular care and attention.
 
-## 🔐 Authentication System
+🍃 AI Leaf Disease Detection
 
-- User Registration
-- User Login
-- Password hashing using bcryptjs
-- JWT token generation
-- Token stored in LocalStorage
-- Axios interceptor attaches token automatically
-- Protected backend routes using auth middleware
-- Logout functionality
-- Multi-user support
+GreenCare integrates an AI-based plant disease detection system.
+Users can upload an image of a plant leaf through the application interface.
+The uploaded image is analyzed using a trained image classification model.
+The model predicts the disease and displays the most likely result.
+The prediction also includes a confidence percentage for accuracy.
+This feature helps users quickly identify plant health problems.
 
----
+🌿 Supported Plant Diseases
 
-## 👤 User Profile System
+The current AI model can detect the following plant diseases:
 
-Each user includes:
+Mosaic Virus
 
-- Name
-- Email
-- Hashed password
-- Bio
-- Interests (array)
-- Profile picture
-- Followers (User references)
-- Following (User references)
-- Saved posts
-- Automatic timestamps
+Leaf Spot
 
-### Profile Features
+Early Blight
 
-- Edit profile (name, bio, interests)
-- Upload profile picture
-- Grid layout of personal posts
-- Total post count
-- Total likes count
-- Total comments count
+Late Blight
 
----
+Bacterial Spot
 
-## 📝 Post System
+🛠 Technology Stack
 
-Each post contains:
+GreenCare is built using modern full-stack web development technologies.
+The application follows the MERN stack architecture for scalability and performance.
+React is used for building a dynamic user interface.
+Node.js and Express manage backend server logic and API endpoints.
+MongoDB is used for storing user data, posts, and reminders.
+The AI detection feature is implemented using TensorFlow-based image classification.
 
-- Caption
-- Image
-- User reference
-- Likes (array of user IDs)
-- Comments (array of objects)
-- Timestamps
+🎨 Frontend Technologies
 
-### Post Features
+The frontend handles user interface design and user interactions.
 
-- Create post with image upload
-- Edit post (owner only)
-- Delete post (owner only)
-- Like / Unlike functionality
-- Comment system
-- Instant UI updates
-- Conditional owner controls
-- Multi-user interaction
+React.js
 
----
+React Router
 
-## 🌿 Reminder System
+Axios
 
-Reminder Model Includes:
+Tailwind CSS
 
-- Title
-- Plant name
-- Type (watering, fertilizing, pruning)
-- Date
-- Repeat option (none, daily, weekly, monthly)
-- Completed status
-- User reference
+Moment.js
 
-### Reminder Features
+⚙️ Backend Technologies
 
-- Create reminder
-- View reminders
-- Toggle complete
-- Delete reminder
-- Overdue highlighting
-- User-based protection
+The backend manages application logic, database communication, and APIs.
 
----
+Node.js
 
-## 📸 Image Upload System
+Express.js
 
-- Implemented using Multer
-- Disk storage configuration
-- Uploads folder management
-- Express static serving
-- Used for profile pictures and post images
+MongoDB
 
----
+Mongoose
 
-## 🛠️ Technology Stack
+JSON Web Token (JWT) Authentication
 
-### Frontend
-- React (Vite)
-- React Router DOM
-- Axios
-- Tailwind CSS
-- Moment.js
+Multer (Image Upload Handling)
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT
-- bcryptjs
-- Multer
-- dotenv
-- nodemon
+🤖 Machine Learning
 
----
+The disease detection system uses machine learning technologies.
 
-## 📁 Project Structure
+TensorFlow
 
-```
+Teachable Machine
 
-Green-care/
+Image Classification Model for Leaf Disease Detection
+
+📂 Project Structure
+Green-care
 │
-├── client/
-│   ├── src/
-│   │   ├── api/api.js
-│   │   ├── components/Navbar.jsx
-│   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── Welcome.jsx
-│   │   │   ├── Feed.jsx
-│   │   │   ├── Profile.jsx
-│   │   │   └── Reminders.jsx
-│   │   ├── App.jsx
-│   │   └── main.jsx
+├── client
+│   ├── components
+│   ├── pages
+│   ├── api
+│   └── App.jsx
 │
-├── server/
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── Post.js
-│   │   └── Reminder.js
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── postRoutes.js
-│   │   ├── reminderRoutes.js
-│   │   ├── userRoutes.js
-│   │   └── notificationRoutes.js
-│   ├── middleware/authMiddleware.js
-│   ├── uploads/
-│   ├── index.js
-│   └── .env
-
-````
-
----
-
-## ⚙️ Setup Instructions
-
-### 1️⃣ Clone the Repository
-
-```bash
+├── server
+│   ├── models
+│   ├── routes
+│   ├── middleware
+│   ├── uploads
+│   └── index.js
+│
+└── README.md
+⚙️ Installation
+1️⃣ Clone the Repository
 git clone https://github.com/sanjai2022006-debug/Green-care.git
-cd Green-care
-````
-
----
-
-### 2️⃣ Backend Setup
-
-```bash
+2️⃣ Install Backend Dependencies
 cd server
 npm install
-```
-
-Create a `.env` file inside `server/` and add:
-
-```
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-```
-
-Start backend:
-
-```bash
-npm run dev
-```
-
-Backend runs on:
-`http://localhost:5000`
-
----
-
-### 3️⃣ Frontend Setup
-
-Open a new terminal:
-
-```bash
+3️⃣ Install Frontend Dependencies
 cd client
 npm install
+4️⃣ Run Backend Server
+npm start
+5️⃣ Run Frontend
 npm run dev
-```
-
-Frontend runs on:
-`http://localhost:5173`
-
----
-
-## 🚀 Future Enhancements
-
-* Follow / Unfollow system
-* Real-time notifications (Socket.io)
-* Search users
-* Dark mode toggle
-* Cloudinary image storage
-* Deployment to Render & Vercel
-* Real-time activity feed
-

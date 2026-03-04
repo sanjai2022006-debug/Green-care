@@ -1,7 +1,7 @@
 # 🌿 GreenCare – Smart Plant Care Platform
 
 
-<img width="647" height="559" alt="image" src="https://github.com/user-attachments/assets/541299cc-d374-466c-b87e-2f2b49f0e09d" />
+<img width="647" height="400" alt="image" src="https://github.com/user-attachments/assets/541299cc-d374-466c-b87e-2f2b49f0e09d" />
 
 
 GreenCare is a **full-stack MERN web application** designed to help plant lovers manage plant health and connect with a plant care community.

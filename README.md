@@ -79,6 +79,13 @@ Users can create reminders for plant care activities such as **watering, fertili
 Users can upload a plant leaf image and the system predicts plant diseases using an **image classification machine learning model**.
 
 ---
+## 🧪 API Testing
+
+All backend APIs were tested using **Thunder Client** in Visual Studio Code.
+
+The tool was used to verify endpoints for **authentication, posts, reminders, and user profile management**. Requests were tested with **JSON bodies, JWT tokens, and image uploads** to ensure proper API functionality.
+
+-------
 
 # 🌿 Supported Plant Diseases
 
@@ -120,21 +127,67 @@ This helps users quickly identify plant health issues.
 ```
 Green-care
 │
-├── client
-│   ├── components
-│   ├── pages
-│   ├── api
-│   └── App.jsx
+├── client                         # Frontend (React Application)
+│   ├── public
+│   │
+│   ├── src
+│   │   ├── api                    # Axios API configuration
+│   │   │   └── api.js
+│   │   │
+│   │   ├── components             # Reusable UI components
+│   │   │   └── Navbar.jsx
+│   │   │
+│   │   ├── pages                  # Main application pages
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Feed.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   ├── Reminders.jsx
+│   │   │   └── Welcome.jsx
+│   │   │
+│   │   ├── App.jsx                # React Router configuration
+│   │   ├── main.jsx               # React entry point
+│   │   └── index.css
+│   │
+│   ├── package.json
+│   └── vite.config.js
 │
-├── server
-│   ├── models
-│   ├── routes
-│   ├── middleware
-│   ├── uploads
-│   └── index.js
 │
-└── README.md
+├── server                         # Backend (Node + Express API)
+│   │
+│   ├── models                     # MongoDB Schemas
+│   │   ├── User.js
+│   │   ├── Post.js
+│   │   └── Reminder.js
+│   │
+│   ├── routes                     # Express API routes
+│   │   ├── authRoutes.js
+│   │   ├── postRoutes.js
+│   │   ├── reminderRoutes.js
+│   │   └── userRoutes.js
+│   │
+│   ├── middleware                 # Authentication Middleware
+│   │   └── authMiddleware.js
+│   │
+│   ├── uploads                    # Uploaded images (posts/profile)
+│   │
+│   ├── index.js                   # Main Express server
+│   ├── package.json
+│   └── .env
+│
+│
+├── ai-model                       # Machine Learning Model
+│   ├── model.json
+│   ├── metadata.json
+│   └── weights.bin
+│
+│
+├── screenshots                    # Project screenshots (for README)
+│
+├── README.md
+└── package.json
 ```
+
 
 ---
 
@@ -238,9 +291,4 @@ Steps to contribute:
 
 ---
 
-# 👨‍💻 Author
-
-**Sanji**
-
-BCA Student | Aspiring Web Developer | MERN Stack Learner
 

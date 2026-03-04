@@ -1,15 +1,8 @@
 # 🌿 GreenCare – Smart Plant Care Platform
 
-![MERN](https://img.shields.io/badge/MERN-Stack-green)
-![React](https://img.shields.io/badge/Frontend-React-blue)
-![Node](https://img.shields.io/badge/Backend-Node.js-green)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen)
-![TensorFlow](https://img.shields.io/badge/AI-TensorFlow-orange)
-![License](https://img.shields.io/badge/Project-Educational-blue)
 
 <img width="647" height="559" alt="image" src="https://github.com/user-attachments/assets/541299cc-d374-466c-b87e-2f2b49f0e09d" />
 
-<img width="1907" height="879" alt="image" src="https://github.com/user-attachments/assets/6a7b6551-3b5b-4fd7-b9a9-3565165d2d5f" />
 
 GreenCare is a **full-stack MERN web application** designed to help plant lovers manage plant health and connect with a plant care community.
 
@@ -34,24 +27,17 @@ Demo Link:
 
 # 📸 Screenshots
 
-*(You can upload images later inside GitHub repo and link them here)*
 
-Example:
 
 ```
-/screenshots/feed.png
-/screenshots/profile.png
-/screenshots/reminder.png
-/screenshots/disease-detection.png
-```
-
-Then show them like:
-
-```
-![Feed](screenshots/feed.png)
-![Profile](screenshots/profile.png)
-![Reminder](screenshots/reminder.png)
-![Disease Detection](screenshots/disease.png)
+![Feed](<img width="662" height="808" alt="image" src="https://github.com/user-attachments/assets/1e5b3221-363a-4deb-b2cf-2326e4c63d0e" />
+)
+![Profile](<img width="1084" height="734" alt="image" src="https://github.com/user-attachments/assets/1b98c286-418d-44f5-a22f-13ab5d7a17a3" />
+)
+![Reminder](<img width="647" height="635" alt="image" src="https://github.com/user-attachments/assets/90c0d378-7a53-4622-82a8-8866ee2636d2" />
+)
+![Disease Detection](<img width="940" height="609" alt="image" src="https://github.com/user-attachments/assets/b918bc6f-13ab-43e5-9c08-506c5d3a10ac" />
+)
 ```
 
 ---

@@ -30,15 +30,15 @@ Demo Link:
 
 
 ```
-![Feed](<img width="662" height="808" alt="image" src="https://github.com/user-attachments/assets/1e5b3221-363a-4deb-b2cf-2326e4c63d0e" />
-)
-![Profile](<img width="1084" height="734" alt="image" src="https://github.com/user-attachments/assets/1b98c286-418d-44f5-a22f-13ab5d7a17a3" />
-)
-![Reminder](<img width="647" height="635" alt="image" src="https://github.com/user-attachments/assets/90c0d378-7a53-4622-82a8-8866ee2636d2" />
-)
-![Disease Detection](<img width="940" height="609" alt="image" src="https://github.com/user-attachments/assets/b918bc6f-13ab-43e5-9c08-506c5d3a10ac" />
-)
-```
+## 📸 Screenshots
+
+![Feed](https://github.com/user-attachments/assets/1e5b3221-363a-4deb-b2cf-2326e4c63d0e)
+
+![Profile](https://github.com/user-attachments/assets/1b98c286-418d-44f5-a22f-13ab5d7a17a3)
+
+![Reminder](https://github.com/user-attachments/assets/90c0d378-7a53-4622-82a8-8866ee2636d2)
+
+![Disease Detection](https://github.com/user-attachments/assets/b918bc6f-13ab-43e5-9c08-506c5d3a10ac)
 
 ---
 

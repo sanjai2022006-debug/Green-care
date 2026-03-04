@@ -39,7 +39,7 @@ Demo Link:
 ![Reminder](https://github.com/user-attachments/assets/90c0d378-7a53-4622-82a8-8866ee2636d2)
 
 ![Disease Detection](https://github.com/user-attachments/assets/b918bc6f-13ab-43e5-9c08-506c5d3a10ac)
-
+```
 ---
 
 # 🚀 Key Features

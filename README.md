@@ -1,130 +1,123 @@
-🌿 GreenCare – Smart Plant Care Platform
+# 🌿 GreenCare – Smart Plant Care Platform
 
-GreenCare is a full-stack MERN web application designed to help plant lovers manage plant health and connect with a plant care community.
-The platform allows users to share plant posts, set reminders for plant care, and detect plant diseases using AI.
+![MERN](https://img.shields.io/badge/MERN-Stack-green)
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Node](https://img.shields.io/badge/Backend-Node.js-green)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen)
+![TensorFlow](https://img.shields.io/badge/AI-TensorFlow-orange)
+![License](https://img.shields.io/badge/Project-Educational-blue)
+
+<img width="647" height="559" alt="image" src="https://github.com/user-attachments/assets/541299cc-d374-466c-b87e-2f2b49f0e09d" />
+
+<img width="1907" height="879" alt="image" src="https://github.com/user-attachments/assets/6a7b6551-3b5b-4fd7-b9a9-3565165d2d5f" />
+
+GreenCare is a **full-stack MERN web application** designed to help plant lovers manage plant health and connect with a plant care community.
+
+The platform allows users to **share plant posts, set reminders for plant care, and detect plant diseases using AI**.
+
 Users can upload images of plant leaves and the system predicts possible diseases using a trained machine learning model.
-GreenCare combines social interaction, plant care management, and intelligent disease detection in a single platform.
-The goal of the application is to make plant care easier and more accessible.
-It helps users maintain healthy plants while learning from a community of other plant enthusiasts.
 
-🚀 Features
+GreenCare combines **social interaction, plant care management, and intelligent disease detection** in a single platform.
 
-GreenCare provides multiple features that support both community interaction and plant care management.
-Users can share posts about their plants, interact with other users, and maintain their plant care schedules.
-The application integrates a feed system, reminder system, and AI-based disease detection.
-Each feature is designed to simplify plant care tasks and provide useful plant health insights.
-The platform also ensures secure access through authentication and protected routes.
-All these tools are integrated into a single user-friendly web application.
+The goal of the application is to **make plant care easier and more accessible** while helping users maintain healthy plants through community learning.
 
-🔐 User Authentication
+---
 
-GreenCare includes a secure authentication system to manage user accounts.
-Users can register with their details and log in using their credentials.
-The system uses JWT authentication to protect private routes within the application.
-Only authenticated users can create posts, interact with content, or manage reminders.
-User information is stored securely in the database and handled through backend validation.
-This authentication system ensures safe and reliable access to the platform features.
+# 🌍 Live Demo
 
-📰 Community Feed
+*(Add this later if deployed)*
 
-The community feed allows users to share plant-related content with others.
-Users can create posts and upload images of their plants.
-Other users can interact with these posts by liking or commenting on them.
-Users can also edit or delete their own posts when necessary.
-The feed encourages interaction and knowledge sharing among plant lovers.
-It helps users learn about plant care through community discussions and experiences.
+Demo Link:
+`Coming Soon`
 
-👤 User Profile
+---
 
-Each user has a dedicated profile page within the platform.
-The profile page displays user information and the posts created by the user.
-Users can update their name, bio, and personal interests.
-A profile picture can also be uploaded to personalize the account.
-The profile helps other users understand the interests of each member.
-It also acts as a personal space where users can manage their content.
+# 📸 Screenshots
 
-⏰ Plant Care Reminder System
+*(You can upload images later inside GitHub repo and link them here)*
 
-GreenCare includes a reminder system to help users stay consistent with plant care tasks.
-Users can create reminders for activities such as watering, fertilizing, and pruning plants.
-Each reminder can be scheduled based on different frequencies.
-Supported reminder schedules include daily, weekly, and monthly options.
-Users can edit or delete reminders whenever required.
-This system helps ensure that plants receive regular care and attention.
+Example:
 
-🍃 AI Leaf Disease Detection
+```
+/screenshots/feed.png
+/screenshots/profile.png
+/screenshots/reminder.png
+/screenshots/disease-detection.png
+```
 
-GreenCare integrates an AI-based plant disease detection system.
-Users can upload an image of a plant leaf through the application interface.
-The uploaded image is analyzed using a trained image classification model.
-The model predicts the disease and displays the most likely result.
-The prediction also includes a confidence percentage for accuracy.
-This feature helps users quickly identify plant health problems.
+Then show them like:
 
-🌿 Supported Plant Diseases
+```
+![Feed](screenshots/feed.png)
+![Profile](screenshots/profile.png)
+![Reminder](screenshots/reminder.png)
+![Disease Detection](screenshots/disease.png)
+```
 
-The current AI model can detect the following plant diseases:
+---
 
-Mosaic Virus
+# 🚀 Key Features
 
-Leaf Spot
+### 📰 Community Feed
 
-Early Blight
+Users can create posts and share plant images with the community. Other users can like and comment on posts to interact and exchange plant care knowledge.
 
-Late Blight
+### 🔐 User Authentication
 
-Bacterial Spot
+Secure login and registration system using **JWT authentication** that protects private routes and user data.
 
-🛠 Technology Stack
+### 👤 User Profile
 
-GreenCare is built using modern full-stack web development technologies.
-The application follows the MERN stack architecture for scalability and performance.
-React is used for building a dynamic user interface.
-Node.js and Express manage backend server logic and API endpoints.
-MongoDB is used for storing user data, posts, and reminders.
-The AI detection feature is implemented using TensorFlow-based image classification.
+Users have a personal profile where they can update their **name, bio, interests, and profile picture**.
 
-🎨 Frontend Technologies
+### ⏰ Plant Care Reminder System
 
-The frontend handles user interface design and user interactions.
+Users can create reminders for plant care activities such as **watering, fertilizing, and pruning** with **daily, weekly, or monthly schedules**.
 
-React.js
+### 🍃 AI Leaf Disease Detection
 
-React Router
+Users can upload a plant leaf image and the system predicts plant diseases using an **image classification machine learning model**.
 
-Axios
+---
 
-Tailwind CSS
+# 🌿 Supported Plant Diseases
 
-Moment.js
+The AI model currently detects:
 
-⚙️ Backend Technologies
+* Mosaic Virus
+* Leaf Spot
+* Early Blight
+* Late Blight
+* Bacterial Spot
 
-The backend manages application logic, database communication, and APIs.
+---
 
-Node.js
+# 🛠 Technology Stack
 
-Express.js
+| Category       | Technologies                                |
+| -------------- | ------------------------------------------- |
+| Frontend       | React.js, React Router, Axios, Tailwind CSS |
+| Backend        | Node.js, Express.js                         |
+| Database       | MongoDB, Mongoose                           |
+| Authentication | JSON Web Token (JWT)                        |
+| Image Upload   | Multer                                      |
+| AI Model       | TensorFlow, Teachable Machine               |
 
-MongoDB
+---
 
-Mongoose
+# 🤖 Machine Learning
 
-JSON Web Token (JWT) Authentication
+GreenCare integrates an **image classification model** trained using **Google Teachable Machine** and TensorFlow.
 
-Multer (Image Upload Handling)
+The model analyzes uploaded plant leaf images and predicts diseases with a **confidence score**.
 
-🤖 Machine Learning
+This helps users quickly identify plant health issues.
 
-The disease detection system uses machine learning technologies.
+---
 
-TensorFlow
+# 📂 Project Structure
 
-Teachable Machine
-
-Image Classification Model for Leaf Disease Detection
-
-📂 Project Structure
+```
 Green-care
 │
 ├── client
@@ -141,16 +134,113 @@ Green-care
 │   └── index.js
 │
 └── README.md
-⚙️ Installation
-1️⃣ Clone the Repository
+```
+
+---
+
+# ⚙️ Installation
+
+## 1️⃣ Clone the Repository
+
+```
 git clone https://github.com/sanjai2022006-debug/Green-care.git
-2️⃣ Install Backend Dependencies
+```
+
+---
+
+## 2️⃣ Install Backend Dependencies
+
+```
 cd server
 npm install
-3️⃣ Install Frontend Dependencies
+```
+
+---
+
+## 3️⃣ Install Frontend Dependencies
+
+```
 cd client
 npm install
-4️⃣ Run Backend Server
+```
+
+---
+
+## 4️⃣ Run Backend Server
+
+```
 npm start
-5️⃣ Run Frontend
+```
+
+---
+
+## 5️⃣ Run Frontend
+
+```
 npm run dev
+```
+
+---
+
+# 🚀 Future Enhancements
+
+GreenCare will continue to evolve with new features.
+
+### 📱 Mobile Application
+
+Develop an Android and iOS mobile app for better accessibility.
+
+### 👥 Follow / Followers System
+
+Users will be able to follow other plant lovers and see posts from followed users.
+
+### 💬 Real-Time Messaging
+
+Enable users to chat and share plant care advice directly.
+
+### 🔔 Real-Time Notifications
+
+Users will receive notifications when someone likes, comments, or follows them.
+
+### 🌿 More Disease Detection Models
+
+Expand AI support to detect more plant diseases and plant species.
+
+### 📊 Plant Health Analytics
+
+Provide statistics and insights about plant care and disease detection history.
+
+### 🧠 AI Plant Care Suggestions
+
+AI-based recommendations for watering, fertilizing, and treating plant diseases.
+
+### 📷 Camera Integration
+
+Allow direct image capture from device cameras for faster disease detection.
+
+### 🌍 Community Knowledge Base
+
+Create a plant care learning section with guides and tutorials.
+
+---
+
+# 🌱 Contribution
+
+Contributions are welcome!
+
+Steps to contribute:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push the branch
+5. Open a Pull Request
+
+---
+
+# 👨‍💻 Author
+
+**Sanji**
+
+BCA Student | Aspiring Web Developer | MERN Stack Learner
+
